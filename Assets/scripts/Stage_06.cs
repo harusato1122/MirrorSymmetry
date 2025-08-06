@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Stage_06 : MonoBehaviour
 {
     public GameObject object1; // 上に動く
     public GameObject object2; // 下に動く
+    [SerializeField] GameObject symmetryLine;
 
     private Camera mainCamera;
     private bool isDragging = false;
@@ -51,6 +53,7 @@ public class Stage_06 : MonoBehaviour
             {
                 Debug.Log("🎉 クリア！！両方 Y=0 にスナップされました！");
                 // 必要に応じて他の処理を追加（例：シーン遷移など）
+                GameClear();
             }
         }
 
@@ -94,5 +97,22 @@ public class Stage_06 : MonoBehaviour
     bool IsAtZero(GameObject obj)
     {
         return Mathf.Approximately(obj.transform.position.y, 0f);
+    }
+
+    void GameClear()
+    {
+        ShowSymmetryLine();
+    }
+
+    void ShowSymmetryLine()
+    {
+        symmetryLine.SetActive(true);
+        StartCoroutine(WaitFiveSeconds());
+    }
+
+    IEnumerator WaitFiveSeconds()
+    {
+        yield return new WaitForSeconds(1.1f);
+        SceneManager.LoadScene("Stage_07");
     }
 }

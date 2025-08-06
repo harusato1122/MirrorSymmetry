@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Stage_03 : MonoBehaviour
 {
     public GameObject object1; // Z軸回転
     public GameObject object2; // Y軸回転
+    [SerializeField] GameObject symmetryLine;
 
     private Camera mainCamera;
     private GameObject selectedObject = null;
@@ -126,6 +129,19 @@ public class Stage_03 : MonoBehaviour
 
     void GameClear()
     {
-
+        ShowSymmetryLine();
     }
+
+    void ShowSymmetryLine()
+    {
+        symmetryLine.SetActive(true);
+        StartCoroutine(WaitFiveSeconds());
+    }
+
+    IEnumerator WaitFiveSeconds()
+    {
+        yield return new WaitForSeconds(1.1f);
+        SceneManager.LoadScene("Stage_04");
+    }
+
 }

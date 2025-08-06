@@ -1,15 +1,18 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class Stage_05 : MonoBehaviour
 {
-    public GameObject[] targetObjects;
+    public GameObject[] targetObjects; // 4„Å§ÂÖ•„Çå„Å¶„Åä„Åè
+    [SerializeField] GameObject symmetryLine;
 
     private Camera mainCamera;
     private GameObject selectedObject = null;
     private Vector3 lastMousePos;
 
-    private float snapTolerance = 5f; // Å}5ìxÇ≈ÉXÉiÉbÉv
+    private float snapTolerance = 5f; // ¬±5Â∫¶„Åß„Çπ„Éä„ÉÉ„Éó
 
     void Start()
     {
@@ -26,8 +29,6 @@ public class Stage_05 : MonoBehaviour
             if (clicked != null && IsTarget(clicked))
             {
                 selectedObject = clicked;
-
-                // ÉNÉäÉbÉNÇ≈ï∂éöêÿÇËë÷Ç¶
                 ToggleTextCase(clicked);
             }
         }
@@ -54,17 +55,19 @@ public class Stage_05 : MonoBehaviour
         if (selectedObject == null) return;
 
         float zAngle = NormalizeAngle(selectedObject.transform.eulerAngles.z);
-
         float[] snapAngles = { 0f, 90f, 180f, 270f };
+
         foreach (float targetAngle in snapAngles)
         {
             if (Mathf.Abs(zAngle - targetAngle) < snapTolerance)
             {
                 selectedObject.transform.rotation = Quaternion.Euler(0f, 0f, targetAngle);
-                Debug.Log($"ÉsÉ^ÉbÇ∆ {targetAngle} ìxÇ…ÉXÉiÉbÉvÅI");
+                Debug.Log($"„Éî„Çø„ÉÉ„Å® {targetAngle} Â∫¶„Å´„Çπ„Éä„ÉÉ„ÉóÔºÅ");
                 break;
             }
         }
+
+        CheckGameClear();
     }
 
     GameObject GetClickedObject()
@@ -120,5 +123,61 @@ public class Stage_05 : MonoBehaviour
         angle %= 360f;
         if (angle < 0f) angle += 360f;
         return angle;
+    }
+
+    void CheckGameClear()
+    {
+        if (targetObjects.Length < 4) return;
+
+        bool IsUpper(GameObject obj)
+        {
+            TMP_Text tmp = obj.GetComponentInChildren<TMP_Text>();
+            return tmp != null && tmp.text.Length > 0 && char.IsUpper(tmp.text[0]);
+        }
+
+        bool IsLower(GameObject obj)
+        {
+            TMP_Text tmp = obj.GetComponentInChildren<TMP_Text>();
+            return tmp != null && tmp.text.Length > 0 && char.IsLower(tmp.text[0]);
+        }
+
+        bool IsAngleNear(GameObject obj, float target)
+        {
+            float z = NormalizeAngle(obj.transform.eulerAngles.z);
+            return Mathf.Abs(z - target) < snapTolerance;
+        }
+
+        GameObject obj1 = targetObjects[0];
+        GameObject obj2 = targetObjects[1];
+        GameObject obj3 = targetObjects[2];
+        GameObject obj4 = targetObjects[3];
+
+        bool cond1 = IsUpper(obj1);
+        bool cond2 = IsUpper(obj2) || (IsLower(obj2) && (IsAngleNear(obj2, 90f) || IsAngleNear(obj2, 270f)));
+        bool cond3 = IsUpper(obj3) && (IsAngleNear(obj3, 0f) || IsAngleNear(obj3, 180f));
+        bool cond4 = IsUpper(obj4) && (IsAngleNear(obj4, 90f) || IsAngleNear(obj4, 270f));
+
+        if (cond1 && cond2 && cond3 && cond4)
+        {
+            Debug.Log("üéâ „ÇØ„É™„Ç¢Âà§ÂÆöÊàêÂäüÔºÅ");
+            GameClear();
+        }
+    }
+
+    void GameClear()
+    {
+        ShowSymmetryLine();
+    }
+
+    void ShowSymmetryLine()
+    {
+        symmetryLine.SetActive(true);
+        StartCoroutine(WaitFiveSeconds());
+    }
+
+    IEnumerator WaitFiveSeconds()
+    {
+        yield return new WaitForSeconds(1.1f);
+        SceneManager.LoadScene("Stage_06");
     }
 }

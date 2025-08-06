@@ -69,15 +69,12 @@ public class Stage_01 : MonoBehaviour
     void ShowSymmetryLine()
     {
         symmetryLine.SetActive(true);
-        LoadNextArea();
+        StartCoroutine(WaitFiveSeconds());
     }
 
-
-    void LoadNextArea()
+    IEnumerator WaitFiveSeconds()
     {
-        // 例：次のシーンへ
+        yield return new WaitForSeconds(1.1f);
         SceneManager.LoadScene("Stage_02");
-
-        // または、新しいエリアのゲームオブジェクトをアクティブにするなど
     }
 }

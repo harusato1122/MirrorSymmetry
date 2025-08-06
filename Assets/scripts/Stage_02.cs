@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Stage_02 : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
     private Collider2D col;
+    [SerializeField] GameObject symmetryLine;
 
     private bool isDragging = false;
     private Vector3 initialMousePos;
@@ -50,8 +53,6 @@ public class Stage_02 : MonoBehaviour
                 float currentSize = transform.localScale.x;
                 if (Mathf.Abs(currentSize - 2f) < 0.2f)
                 {
-                    Debug.Log("クリア！");
-                    // TODO: ここにクリア演出やシーン遷移など追加
                     GameClear();
                 }
             }
@@ -82,6 +83,18 @@ public class Stage_02 : MonoBehaviour
 
     void GameClear()
     {
+        ShowSymmetryLine();
+    }
 
+    void ShowSymmetryLine()
+    {
+        symmetryLine.SetActive(true);
+        StartCoroutine(WaitFiveSeconds());
+    }
+
+    IEnumerator WaitFiveSeconds()
+    {
+        yield return new WaitForSeconds(1.1f);
+        SceneManager.LoadScene("Stage_03");
     }
 }

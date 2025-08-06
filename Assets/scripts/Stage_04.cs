@@ -1,9 +1,12 @@
 using UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Stage_04 : MonoBehaviour
 {
-    public Vector3 snapTargetPosition = new Vector3(2f, 1f, 0f); // ピタッとくっつく目標座標
+    public Vector3 snapTargetPosition = new Vector3(-1f, 2f, 0f); // ピタッとくっつく目標座標
     public float snapThreshold = 0.5f; // 吸着の許容距離
+    [SerializeField] GameObject symmetryLine;
 
     private Vector3 offset;
     private bool isDragging = false;
@@ -37,6 +40,7 @@ public class Stage_04 : MonoBehaviour
             {
                 transform.position = snapTargetPosition;
                 Debug.Log("ピタッと吸着！");
+                GameClear();
             }
         }
 
@@ -66,5 +70,22 @@ public class Stage_04 : MonoBehaviour
         }
 
         return false;
+    }
+
+    void GameClear()
+    {
+        ShowSymmetryLine();
+    }
+
+    void ShowSymmetryLine()
+    {
+        symmetryLine.SetActive(true);
+        StartCoroutine(WaitFiveSeconds());
+    }
+
+    IEnumerator WaitFiveSeconds()
+    {
+        yield return new WaitForSeconds(1.1f);
+        SceneManager.LoadScene("Stage_05");
     }
 }

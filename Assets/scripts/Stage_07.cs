@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Stage_07 : MonoBehaviour
 {
     public GameObject stretchXObject; // X方向に伸ばす
     public GameObject stretchYObject; // Y方向に伸ばす
+    [SerializeField] GameObject symmetryLine;
 
     private Vector3 lastMousePos;
     private bool isDragging = false;
@@ -56,6 +59,7 @@ public class Stage_07 : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             isDragging = false;
+            if (NormalizeAngle(transform.eulerAngles.z) == 0) GameClear();
         }
 
         // ドラッグ中の回転
@@ -133,5 +137,22 @@ public class Stage_07 : MonoBehaviour
     {
         angle %= 360f;
         return (angle < 0) ? angle + 360f : angle;
+    }
+
+    void GameClear()
+    {
+        ShowSymmetryLine();
+    }
+
+    void ShowSymmetryLine()
+    {
+        symmetryLine.SetActive(true);
+        StartCoroutine(WaitFiveSeconds());
+    }
+
+    IEnumerator WaitFiveSeconds()
+    {
+        yield return new WaitForSeconds(1.1f);
+        SceneManager.LoadScene("Stage_08");
     }
 }
