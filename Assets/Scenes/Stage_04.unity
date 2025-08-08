@@ -651,6 +651,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7288850036550256503, guid: 283e4aaf2a25cca4498f5ab80655a281, type: 3}
+      propertyPath: shrinkDuration
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 9171880635732683071, guid: 283e4aaf2a25cca4498f5ab80655a281, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
